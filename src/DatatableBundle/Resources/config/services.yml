@@ -1,0 +1,40 @@
+services:
+    rabble.datatable.routing_listener:
+        class: Rabble\DatatableBundle\Routing\RoutingListener
+        tags:
+            - { name: 'kernel.event_listener', event: 'rabble_admin.routing.load', method: onRoutingLoad }
+    rabble.datatable.datatable_collection:
+        class: Doctrine\Common\Collections\ArrayCollection
+        public: true
+
+    datatables:
+        alias: rabble.datatable.datatable_collection
+        public: true
+
+    rabble.datatable.expression_language.cache_adapter:
+        parent: cache.adapter.filesystem
+
+    rabble.datatable.expression_language:
+        class: Rabble\DatatableBundle\ExpressionLanguage\ExpressionLanguage
+        arguments: [ '@rabble.datatable.expression_language.cache_adapter' ]
+
+    rabble_datatable.expression_language.datatable_provider:
+        class: Rabble\DatatableBundle\ExpressionLanguage\DatatableProvider
+        arguments: [ '@translator', '@router', '@twig', '@security.authorization_checker' ]
+        tags: [ 'rabble_datatable.expression_language.provider' ]
+
+    rabble.datatable.controller.table:
+        class: Rabble\DatatableBundle\Controller\TableController
+        arguments: [ '@rabble.datatable.datatable_collection' ]
+        autoconfigure: true
+        autowire: true
+        tags: [ 'controller.service_arguments' ]
+
+    rabble.datatable.data_fetcher.orm:
+        class: Rabble\DatatableBundle\Datatable\DataFetcher\ORMDataFetcher
+        arguments: [ '@doctrine.orm.entity_manager', '@knp_paginator' ]
+
+    rabble.datatable.twig_extension:
+        class: Rabble\DatatableBundle\Twig\DatatableExtension
+        arguments: [ '@rabble.datatable.datatable_collection', '@form.factory' ]
+        tags: [ 'twig.extension' ]

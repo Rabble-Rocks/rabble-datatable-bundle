@@ -1,0 +1,34 @@
+{
+    "name": "rabble/datatable-bundle",
+    "type": "symfony-bundle",
+    "description": "The datatable bundle allows you to create datatables using only backend code. See https://datatables.net/",
+    "keywords": ["rabble", "admin", "datatables"],
+    "homepage": "https://rabble.rocks",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rachel Snijders",
+            "email": "rainbowvision.bn@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0"
+    },
+    "require-dev": {
+        "symfony/twig-bundle": "^3.4 | ^4.0 | ^5.0",
+        "symfony/expression-language": "^4.4 | ^5.0",
+        "symfony/framework-bundle": "^3.4 | ^4.4 | ^5.0"
+    },
+    "suggest": {
+        "ongr/elasticsearch-bundle": "for searching in Elasticsearch indexes",
+        "doctrine/orm": "for searching in Doctrine entities"
+    },
+    "autoload": {
+        "psr-4": { "Rabble\\DatatableBundle\\": "src/DatatableBundle" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

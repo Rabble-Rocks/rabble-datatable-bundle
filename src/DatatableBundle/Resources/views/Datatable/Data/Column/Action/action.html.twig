@@ -1,0 +1,9 @@
+{% set buttonStyle = 'btn-info' %}
+{% set classes = ['btn', 'btn-sm'] %}
+{% if attributes.class is defined %}
+    {% if 'btn-' not in attributes.class %}{% set attributes = attributes|merge({class: buttonStyle ~ ' ' ~ attributes.class}) %}{% endif %}
+    {% set attributes = attributes|merge({class: classes|join(' ') ~ ' ' ~ attributes.class}) %}
+{% else %}
+    {% set attributes = attributes|merge({class: classes|join(' ') ~ ' ' ~ buttonStyle}) %}
+{% endif %}
+<a{% for attrname, attrvalue in attributes %} {{ attrname }}="{{ attrvalue }}"{% endfor %} href="{{ url }}"><i class="fa fa-{{ icon }}"></i></a>

@@ -1,0 +1,7 @@
+rabble_datatable_table:
+    path: /datatable/table/{datatable}
+    defaults: { _controller: rabble.datatable.controller.table::indexAction }
+rabble_datatable_table_localized:
+    path: '/{%rabble_admin.content_locale_key%}/datatable/table/{datatable}'
+    defaults:
+        _controller: rabble.datatable.controller.table::indexAction

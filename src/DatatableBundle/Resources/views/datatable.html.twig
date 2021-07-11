@@ -1,0 +1,40 @@
+{% block table %}
+    <table class="table table-striped table-bordered {% block datatable_class %}rabble-datatable-{{ datatable.name }}{% endblock %}" cellspacing="0" width="100%">
+        <thead>
+        {% block heading %}{% endblock %}
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block script %}
+<script>
+    window.addEventListener("load", function load() {
+        {% block script_inner %}
+        $(function($){
+            $(".{{ block('datatable_class') }}").each(function () {
+                let table = $(this);
+                {% block datatable_js %}
+                let settings = {
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": '{% block data_url %}{{ path('rabble_datatable_table', {datatable: datatable.name}) }}{% endblock %}',
+                    "language": {
+                        "url": "{{ asset('admin/build/assets/static/datatables/i18n/' ~ app.request.locale ~ '.json') }}"
+                    }
+                };
+                {% if options is defined %}
+                jQuery.extend(settings, {{ options|raw }});
+                {% endif %}
+                let dataTable = table.DataTable(settings);
+                table.trigger('datatable-load');
+                {% endblock %}
+            } );
+        });
+        {% endblock %}
+    });
+
+</script>
+{% endblock %}

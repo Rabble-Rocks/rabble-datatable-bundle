@@ -1,0 +1,15 @@
+{% if id is not defined %}{% set id = 'undefined' %}{% endif %}
+<th style="width: 30px" data-sortable="false" data-searchable="false" class="check-all-{{ id }}">
+    <input type="checkbox" class="rows-check" data-target=".item-check" />
+</th>
+<script>
+    $('.check-all-{{ id }}').click(function(e) {
+        var checkAll = $(this).find('input');
+        var status = !checkAll.prop('checked') ? 'checked' : 'unchecked';
+        checkAll.icheck(status);
+        $(this).closest('table').find(checkAll.data('target')).each(function() {
+            $(this).icheck(status);
+        });
+        e.preventDefault();
+    });
+</script>

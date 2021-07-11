@@ -1,0 +1,1 @@
+<th{% for attrname, attrvalue in attributes %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{% if translationDomain is same as(false) %}{{ text }}{% else %}{{ text|trans([], translationDomain) }}{% endif %}</th>

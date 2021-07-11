@@ -1,0 +1,89 @@
+{% set filterFormId = 'filter_form_' ~ datatable.name %}
+{% import _self as macro %}
+{% macro showFields(children) %}
+    {% import _self as macro %}
+    <div class="row">
+        {% if children|length >= 4 %}
+            {% for view in children[:4] %}
+                <div class="col-sm-3 col-xs-6">
+                    {{ form_row(view) }}
+                </div>
+            {% endfor %}
+            {% set children = children[4:] %}
+        {% elseif children|length >= 3 %}
+            {% for view in children[:3] %}
+                <div class="col-sm-4 col-xs-{{ loop.last ? '12' : '6' }}">
+                    {{ form_row(view) }}
+                </div>
+            {% endfor %}
+            {% set children = children[3:] %}
+        {% elseif children|length >= 2 %}
+            {% for view in children[:2] %}
+                <div class="col-sm-6 col-xs-6">
+                    {{ form_row(view) }}
+                </div>
+            {% endfor %}
+            {% set children = children[2:] %}
+        {% elseif children|length == 1 %}
+            {% for view in children[:1] %}
+                <div class="col-sm-12 col-xs-12">
+                    {{ form_row(view) }}
+                </div>
+            {% endfor %}
+            {% set children = [] %}
+        {% endif %}
+    </div>
+    {% if children|length > 0 %}
+        {{ macro.showFields(children) }}
+    {% endif %}
+
+{% endmacro %}
+<div class="widget col-xs-12" id="{{ filterFormId }}">
+    <br />
+    {{ form_start(form) }}
+    {{ macro.showFields(form.children[:-1]) }}
+    {{ form_end(form) }}
+    <br />
+</div>
+<script>
+    $(document).ready(function () {
+        let table = $('.rabble-datatable-{{ datatable.name }}');
+        table.on('datatable-load', function () {
+            table = table.DataTable();
+            let api;
+            if(typeof table.api == "function") {
+                api = table.api(true);
+            } else {
+                api = table;
+            }
+            let form = $('#{{ filterFormId }} form');
+            api.on( 'preXhr', function (e, settings, data) {
+                let serializedForm = form.serializeArray();
+                let filterObject = {};
+                for(let i = 0; i < serializedForm.length; i++){
+                    filterObject[serializedForm[i]['name']] = serializedForm[i]['value'];
+                }
+                data = $.extend(data, filterObject);
+            });
+            let keyTimeout = null;
+            form.submit(function (e) {
+                e.preventDefault();
+                api.draw();
+            });
+            form.find(':input').keydown(function () {
+                let input = $(this);
+                let value = input.val();
+                if(null !== keyTimeout) {
+                    clearTimeout(keyTimeout);
+                }
+                keyTimeout = setTimeout(function () {
+                    if(input.val() != value) {
+                        api.draw();
+                    }
+                }, 500);
+            }).change(function () {
+                api.draw();
+            });
+        });
+    });
+</script>

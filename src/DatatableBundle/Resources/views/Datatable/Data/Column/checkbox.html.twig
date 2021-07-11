@@ -1,0 +1,3 @@
+{% if uniqid is not defined %}{% set uniqid = 'undefined' %}{% endif %}
+<input type="checkbox" class="item-check item-check-{{ id }}-{{ uniqid }}" name="{{ checkboxName }}[]" value="{{ id }}" />
+<script>$('.item-check-{{ id }}-{{ uniqid }}').icheck({checkboxClass: 'icheckbox_square-aero'})</script>
