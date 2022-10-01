@@ -3,6 +3,7 @@
 namespace Rabble\DatatableBundle\ExpressionLanguage;
 
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
 
 class ExpressionLanguage extends BaseExpressionLanguage
@@ -20,10 +21,7 @@ class ExpressionLanguage extends BaseExpressionLanguage
         $this->cache = $cache;
     }
 
-    /**
-     * @return array
-     */
-    public function getInjectedVariables()
+    public function getInjectedVariables(): array
     {
         return $this->injectedVariables;
     }
@@ -44,13 +42,7 @@ class ExpressionLanguage extends BaseExpressionLanguage
         }
     }
 
-    /**
-     * @param string|\Symfony\Component\ExpressionLanguage\Expression $expression
-     * @param array                                                   $names
-     *
-     * @return string
-     */
-    public function compile($expression, $names = [])
+    public function compile(Expression|string $expression, array $names = []): string
     {
         foreach (array_keys($this->injectedVariables) as $name) {
             $names[] = $name;
@@ -59,13 +51,7 @@ class ExpressionLanguage extends BaseExpressionLanguage
         return parent::compile($expression, $names);
     }
 
-    /**
-     * @param string|\Symfony\Component\ExpressionLanguage\Expression $expression
-     * @param array                                                   $values
-     *
-     * @return mixed
-     */
-    public function evaluate($expression, $values = [])
+    public function evaluate(Expression|string $expression, array $values = []): mixed
     {
         $names = array_keys($values) + array_keys($this->injectedVariables);
         $namesHash = hash('md5', implode(',', $names));
